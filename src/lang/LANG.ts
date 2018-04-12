@@ -1,4 +1,4 @@
-import { oneOf } from './F'
+import { oneOf } from '../util/F'
 
 export type Env = { [key: string]: AST }
 
@@ -10,21 +10,23 @@ export enum LANG {
   Closure = 'Closure',
   Call = 'Call',
   Nil = 'Nil',
-  BuiltIn = 'BuiltIn',
   // String = 'String',
   // Pair = 'Pair',
   // If = 'If',
+  BuiltIn = 'BuiltIn',
 }
+
+export const builtIn = Symbol('built-in')
 
 export function isValue(ast: AST): ast is ValueAST {
-  return oneOf(LANG.Bool, LANG.Number, LANG.Closure, LANG.Nil, LANG.BuiltIn)(ast.type)
+  return oneOf(LANG.Bool, LANG.Number, LANG.Closure, LANG.Nil)(ast.type)
 }
 
-export type ValueAST = BoolAST | NumberAST | ClosureAST | NilAST | BuiltInAST
-
-export type AST = BoolAST | NumberAST | VarAST | NilAST | ClosureAST | FunAST | CallAST | BuiltInAST
+export type ValueAST = BoolAST | NumberAST | ClosureAST | NilAST
 // | PairAST
-// | IfAST
+export type NonValueAST = VarAST | FunAST | CallAST
+
+export type AST = ValueAST | NonValueAST
 
 export interface IAST {
   type: LANG
@@ -49,21 +51,17 @@ export interface NilAST extends IAST {
   type: LANG.Nil
 }
 
-export interface BuiltInAST extends IAST {
-  type: LANG.BuiltIn
-}
-
 export interface FunAST extends IAST {
   type: LANG.Fun
   name: string
   args: string[]
-  body: AST
+  body: AST | LANG.BuiltIn
 }
 
 export interface ClosureAST extends IAST {
   type: LANG.Closure
   fun: FunAST
-  env: any
+  env: Env
 }
 
 export interface CallAST extends IAST {
@@ -81,11 +79,4 @@ export interface CallAST extends IAST {
 //   type: LANG.Pair
 //   fst: AST
 //   snd: AST
-// }
-
-// export interface IfAST extends IAST {
-//   type: LANG.If
-//   cond: AST
-//   e1: AST
-//   e2: AST
 // }

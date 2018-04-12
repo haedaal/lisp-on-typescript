@@ -1,6 +1,6 @@
-import * as F from './F'
+import * as F from '../util/F'
 // no string in this lang for easier initial implementation
-export function tokenize(line: string): any[] {
+export default function tokenize(line: string): any[] {
   const tokens: any[] = []
 
   let word = ''
@@ -26,3 +26,5 @@ export function tokenize(line: string): any[] {
 
   return tokens
 }
+
+// (def (even x) (if (= x 0) true (if (= x 1) false (even (+ x -2)))))

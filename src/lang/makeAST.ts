@@ -1,6 +1,6 @@
-import { AST, LANG } from './LANG_SPEC'
+import { AST, LANG, FunAST } from './LANG'
 
-export function makeAST(tokens: string[], index: number = 0): [AST, number] {
+export default function makeAST(tokens: string[], index: number = 0): [AST, number] {
   const first = tokens[index]
   switch (first) {
     case '(': {
